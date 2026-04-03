@@ -9,6 +9,7 @@
   "author": "virkyu",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^17.4.0",
     "express": "^5.2.1"
   }
 }
