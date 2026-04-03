@@ -133,7 +133,7 @@ COLLATE=utf8mb4_general_ci;
 ## 📦 Installation
 
 ```bash
-git clone https://github.com/wigguus/Url-shortener.git
+git clone https://github.com/virkyu/Url-shortener.git
 cd Url-shortener
 npm install
 ```
@@ -324,8 +324,8 @@ This keeps the code modular and easy to extend.
 
 ## 👤 Author
 
-**virkyu / wigguus**
-GitHub: [@wigguus](https://github.com/wigguus)
+**virkyu**
+GitHub: [@Virkyu](https://github.com/virkyu)
 
 ---
 
