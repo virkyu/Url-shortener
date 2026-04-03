@@ -20,7 +20,7 @@ const connection = mysql.createPool({
 const getInfo = async (name) => {
     try {
         const [rows] = await connection.execute(
-            `SELECT * ${table} FROM  WHERE name = ?`,
+            `SELECT * FROM ${table} WHERE name = ?`,
             [name]
         );
         
