@@ -1,0 +1,7 @@
+PORT=3000
+
+DATABASE_HOST='localhost'
+DATABASE_USER='root'
+DATABASE_PASS=''
+DATABASE_DB='url_shortener'
+DATABASE_TABLE='main'

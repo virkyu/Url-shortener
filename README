@@ -1,0 +1,335 @@
+# 🔗 URL Shortener API
+
+> Minimal, fast, and clean API for generating short names for URLs and retrieving them later.
+
+![Node.js](https://img.shields.io/badge/Node.js-Backend-green)
+![Express](https://img.shields.io/badge/Express-5.x-black)
+![MySQL](https://img.shields.io/badge/MySQL-Database-blue)
+![License](https://img.shields.io/badge/License-ISC-lightgrey)
+
+---
+
+## ✨ About the project
+
+**URL Shortener API** is a lightweight backend project built with **Node.js**, **Express**, and **MySQL**.
+
+It allows you to:
+
+- add a new URL and generate a short **6-character name**
+- retrieve the original URL by calling `/:name`
+- store generated links inside a MySQL database
+
+This project is simple by design and works well as:
+
+- a backend learning project
+- a small API for integration with frontend apps
+- a base for further expansion like redirects, analytics, or custom aliases
+
+---
+
+## 🚀 Features
+
+- Shortens URLs into unique 6-character names
+- Stores records in MySQL
+- Simple REST API
+- JSON request and JSON response workflow
+- Minimal, modular file structure
+- Automatic endpoint loading through handlers
+
+---
+
+## 🛠️ Tech Stack
+
+- **Node.js**
+- **Express 5**
+- **MySQL**
+- **mysql2**
+- **dotenv**
+
+---
+
+## 📁 Project Structure
+
+```bash
+.
+├── handlers/
+│   └── endpoints.js
+├── endpoints/
+│   ├── add.js
+│   └── get.js
+├── database.js
+├── index.js
+├── package.json
+└── .env
+```
+
+---
+
+## ⚙️ Requirements
+
+Before running the project, make sure you have:
+
+- **Node.js 18+**
+- **MySQL / MariaDB**
+- **npm**
+
+---
+
+## 🔐 Environment Variables
+
+Create a `.env` file in the project root.
+
+Example:
+
+```env
+PORT=3000
+
+DATABASE_HOST='localhost'
+DATABASE_USER='root'
+DATABASE_PASS=''
+DATABASE_DB='url_shortener'
+DATABASE_TABLE='main'
+```
+
+---
+
+## 🗄️ Database Structure
+
+The API expects a table named **`main`** with this structure:
+
+| Column       | Type         | Null | Default               | Key         |
+|--------------|--------------|------|-----------------------|-------------|
+| `name`       | `varchar(6)` | No   | `None`                | PRIMARY KEY |
+| `url`        | `text`       | No   | `None`                | —           |
+| `created_at` | `date`       | No   | `current_timestamp()` | —           |
+
+### SQL to create the database
+
+```sql
+CREATE DATABASE IF NOT EXISTS url_shortener
+CHARACTER SET utf8mb4
+COLLATE utf8mb4_general_ci;
+
+USE url_shortener;
+
+CREATE TABLE main (
+  name VARCHAR(6) NOT NULL,
+  url TEXT NOT NULL,
+  created_at DATE NOT NULL DEFAULT (CURRENT_TIMESTAMP()),
+  PRIMARY KEY (name)
+) ENGINE=InnoDB
+DEFAULT CHARSET=utf8mb4
+COLLATE=utf8mb4_general_ci;
+```
+
+### Important note
+
+- The table must be named **`main`**
+- The `name` column is the **primary key**
+- In `.env`, `DATABASE_TABLE` should be set to **`main`**
+
+---
+
+## 📦 Installation
+
+```bash
+git clone https://github.com/wigguus/Url-shortener.git
+cd Url-shortener
+npm install
+```
+
+Then create your `.env` file and prepare the database.
+
+---
+
+## ▶️ Running the API
+
+```bash
+node index.js
+```
+
+The API will run on:
+
+```text
+http://localhost:3000
+```
+
+---
+
+## 🔌 API Endpoints
+
+### `POST /add`
+
+Creates a new short name for a given URL.
+
+#### Request body
+
+```json
+{
+  "url": "https://example.com"
+}
+```
+
+#### Example request
+
+```bash
+curl -X POST http://localhost:3000/add \
+  -H "Content-Type: application/json" \
+  -d "{\"url\":\"https://example.com\"}"
+```
+
+#### Success response
+
+```json
+{
+  "Status": "Added new shortcut link",
+  "name": "Ab12Cd"
+}
+```
+
+#### Error response
+
+```json
+{
+  "error": "Invalid url"
+}
+```
+
+---
+
+### `GET /:name`
+
+Returns the original URL assigned to the given short name.
+
+#### Example request
+
+```bash
+curl http://localhost:3000/Ab12Cd
+```
+
+#### Success response
+
+```json
+{
+  "name": "Ab12Cd",
+  "url": "https://example.com"
+}
+```
+
+#### Error responses
+
+Invalid name:
+
+```json
+{
+  "error": "Invalid name"
+}
+```
+
+Not found:
+
+```json
+{
+  "error": "Not found"
+}
+```
+
+---
+
+## ✅ Validation Rules
+
+### URL validation in `POST /add`
+
+The API checks that:
+
+- `url` exists in the request body
+- the URL has at least 3 characters
+- the URL matches the expected URL pattern
+- the URL is valid with or without protocol
+
+Examples:
+
+- `https://example.com` ✅
+- `http://example.com/test` ✅
+- `example.com` ✅
+- `abc` ❌
+
+---
+
+### Name validation in `GET /:name`
+
+The API checks that:
+
+- `name` is exactly **6 characters**
+- it starts with a **letter**
+- the remaining characters are alphanumeric
+
+Examples:
+
+- `Ab12Cd` ✅
+- `a12345` ✅
+- `123abc` ❌
+- `abc` ❌
+
+---
+
+## 🧠 How It Works
+
+1. Client sends a `POST /add` request with a URL
+2. The server validates the input
+3. A random 6-character name is generated
+4. The API checks whether this name already exists
+5. If not, the record is inserted into MySQL
+6. Client can later call `GET /:name` to retrieve the original URL
+
+---
+
+## 🏗️ Architecture Notes
+
+The project uses a small handler-based structure:
+
+- `index.js` starts the server
+- files inside `handlers/` are loaded automatically
+- `handlers/endpoints.js` mounts every file from `endpoints/`
+- `add.js` handles URL creation
+- `get.js` handles URL lookup
+- `database.js` handles MySQL queries
+
+This keeps the code modular and easy to extend.
+
+---
+
+## 📌 Notes
+
+- The API currently **returns JSON**
+- It does **not redirect** to the original URL
+- Generated names are always **6 characters long**
+- Records are stored in MySQL
+- The project expects the table to be named **`main`**
+- The `name` column is the primary key
+
+---
+
+## 🚧 Possible Improvements
+
+- redirect to the original URL instead of returning JSON
+- custom aliases
+- delete endpoint
+- click tracking / analytics
+- duplicate URL detection
+- rate limiting
+- Docker support
+- automated tests
+
+---
+
+## 👤 Author
+
+**virkyu / wigguus**  
+GitHub: [@wigguus](https://github.com/wigguus)
+
+---
+
+## ⭐ Support
+
+If you like this project, leave a star on GitHub.
