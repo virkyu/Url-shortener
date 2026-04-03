@@ -4,6 +4,8 @@ const dotenv = require("dotenv")
 
 dotenv.config()
 
+// Important Variables
+const table = process.env.DATABASE_TABLE;
 
 // Database connections and function code.
 
@@ -18,7 +20,7 @@ const connection = mysql.createPool({
 const getInfo = async (name) => {
     try {
         const [rows] = await connection.execute(
-            'SELECT * FROM main WHERE name = ?',
+            `SELECT * ${table} FROM  WHERE name = ?`,
             [name]
         );
         
@@ -31,7 +33,6 @@ const getInfo = async (name) => {
 // insert new record
 const addNew = async (name, url) => {
     try {
-        const table = process.env.DATABASE_TABLE;
         const [rows] = await connection.execute(
             `INSERT INTO ${table} (name, url, created_at) VALUES (?, ?, current_timestamp())`,
             [name, url]

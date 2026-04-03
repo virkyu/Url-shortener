@@ -95,7 +95,7 @@ DATABASE_TABLE='main'
 
 ## 🗄️ Database Structure
 
-The API expects a table named **`main`** with this structure:
+The API expects a table with this structure:
 
 | Column       | Type         | Null | Default               | Key                  |
 | ------------ | ------------ | ---- | --------------------- | -------------------- |
@@ -124,11 +124,9 @@ COLLATE=utf8mb4_general_ci;
 
 ### Important note
 
-* The table must be named **`main`**
 * The `name` column is the **primary key**
 * Because `name` is a **primary key**, it is also **unique**
 * Duplicate values in `name` are not allowed
-* In `.env`, `DATABASE_TABLE` should be set to **`main`**
 
 ---
 
@@ -307,7 +305,6 @@ This keeps the code modular and easy to extend.
 * It does **not redirect** to the original URL
 * Generated names are always **6 characters long**
 * Records are stored in MySQL
-* The project expects the table to be named **`main`**
 * The `name` column is the primary key and unique
 
 ---
