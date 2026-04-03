@@ -14,6 +14,7 @@ const connection = mysql.createPool({
     database: process.env.DATABASE_DB
 })
 
+// get info about record using name
 const getInfo = async (name) => {
     try {
         const [rows] = await connection.execute(
@@ -27,7 +28,26 @@ const getInfo = async (name) => {
     }
 }
 
+// insert new record
+const addNew = async (name, url) => {
+    try {
+        const table = process.env.DATABASE_TABLE;
+        const [rows] = await connection.execute(
+            `INSERT INTO ${table} (name, url, created_at) VALUES (?, ?, current_timestamp())`,
+            [name, url]
+        );
+    
+
+        return true;
+    } catch (error) {
+        console.error("[❌] Error adding record to database!\n" + error);
+
+        return false;
+    }
+}
+
 module.exports = {
     connection,
-    getInfo
+    getInfo,
+    addNew
 }

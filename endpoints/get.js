@@ -6,13 +6,13 @@ const { getInfo } = require("../database.js")
 // Important Variables
 const regex = new RegExp(/^[a-zA-Z][a-zA-Z0-9]*$/);
 
-// Endpoint code
+// Endpoint code '/:name'
 router.get('/:name', async (req, res) => {
     // Validation
     const name = req.params.name ?? null;
     const regexResult = regex.test(name);
 
-    if (name.length != 6 || name === null || regexResult === false) {
+    if (name === null || name.length != 6 || !regexResult) {
         res.status(401).json({ 'error': 'Invalid name' })
         return;
     }
