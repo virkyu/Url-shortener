@@ -8,7 +8,6 @@ dotenv.config()
 const table = process.env.DATABASE_TABLE;
 
 // Database connections and function code.
-
 const connection = mysql.createPool({
     host:     process.env.DATABASE_HOST,
     user:     process.env.DATABASE_USER,
@@ -47,8 +46,24 @@ const addNew = async (name, url) => {
     }
 }
 
+const removeRecord = async (name) => {
+    try {
+        const [rows] = await connection.execute(
+            `DELETE FROM ${table} WHERE name = ?`,
+            [name]
+        );
+
+        return true;
+    } catch (error) {
+        console.error("[❌] Error removing record from database!\n" + error);
+
+        return false;
+    }
+}
+
 module.exports = {
     connection,
     getInfo,
-    addNew
+    addNew,
+    removeRecord
 }
